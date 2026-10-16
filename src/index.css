@@ -33,6 +33,11 @@ body,
   margin: 0;
 }
 
+#root {
+  position: relative;
+  z-index: 1;
+}
+
 body {
   min-height: 100dvh;
   background: var(--paper);
@@ -466,13 +471,20 @@ a {
 
 .player__yt {
   position: fixed;
-  right: 0;
-  bottom: 0;
+  top: 0;
+  left: 0;
   width: 200px;
-  height: 113px;
+  height: 200px;
+  z-index: 0;
   overflow: hidden;
-  opacity: 0;
   pointer-events: none;
+}
+
+.player__yt iframe {
+  display: block;
+  width: 200px;
+  height: 200px;
+  border: 0;
 }
 
 .player__now {

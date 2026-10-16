@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import type { Artist } from "../data/artists";
 import {
   loadYoutubeApi,
@@ -66,6 +67,9 @@ export function Player({ artist }: PlayerProps) {
   const trackIndexRef = useRef(0);
   const tracksRef = useRef(artist.tracks);
   const beginRef = useRef<(index: number) => void>(() => {});
+  const wantPlayRef = useRef(false);
+  const heardPlayRef = useRef(false);
+  const resumeRef = useRef(0);
   const [trackIndex, setTrackIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -84,6 +88,7 @@ export function Player({ artist }: PlayerProps) {
     if (!id) {
       pendingRef.current = null;
       loadedIdRef.current = null;
+      wantPlayRef.current = false;
       playerRef.current?.pauseVideo();
       setPlaying(false);
       setCurrent(0);
@@ -93,6 +98,9 @@ export function Player({ artist }: PlayerProps) {
     }
 
     const player = playerRef.current;
+    wantPlayRef.current = true;
+    heardPlayRef.current = false;
+    resumeRef.current = 0;
     if (!player || !readyRef.current) {
       pendingRef.current = index;
       setPlaying(true);
@@ -124,7 +132,7 @@ export function Player({ artist }: PlayerProps) {
         if (cancelled || !hostRef.current || !window.YT) return;
         created = new window.YT.Player(hostRef.current, {
           width: 200,
-          height: 113,
+          height: 200,
           playerVars: {
             autoplay: 0,
             controls: 0,
@@ -151,12 +159,24 @@ export function Player({ artist }: PlayerProps) {
               if (cancelled) return;
               turnOffCaptions(event.target);
               if (event.data === 1) {
+                heardPlayRef.current = true;
                 setPlaying(true);
                 setError(null);
                 const length = event.target.getDuration();
                 if (Number.isFinite(length) && length > 0) setDuration(length);
               }
-              if (event.data === 2) setPlaying(false);
+              if (event.data === 2) {
+                const shouldResume =
+                  wantPlayRef.current &&
+                  heardPlayRef.current &&
+                  resumeRef.current < 2;
+                if (shouldResume) {
+                  resumeRef.current += 1;
+                  event.target.playVideo();
+                  return;
+                }
+                setPlaying(false);
+              }
               if (event.data === 0) {
                 const next = (trackIndexRef.current + 1) % tracksRef.current.length;
                 if (next === trackIndexRef.current) {
@@ -205,6 +225,7 @@ export function Player({ artist }: PlayerProps) {
   const toggle = () => {
     if (playing) {
       pendingRef.current = null;
+      wantPlayRef.current = false;
       playerRef.current?.pauseVideo();
       setPlaying(false);
       return;
@@ -234,9 +255,12 @@ export function Player({ artist }: PlayerProps) {
 
   return (
     <section className="player" aria-label={`${artist.name} 대표곡`}>
-      <div className="player__yt" aria-hidden="true">
-        <div ref={hostRef} />
-      </div>
+      {createPortal(
+        <div className="player__yt" aria-hidden="true">
+          <div ref={hostRef} />
+        </div>,
+        document.body,
+      )}
 
       <div className="player__now">
         <button
