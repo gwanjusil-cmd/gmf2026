@@ -81,7 +81,6 @@ export function VideoBackground({
     if (!frame) return;
 
     let cancelled = false;
-    let resumes = 0;
     let rewinding = false;
     let player: Parameters<typeof turnOffCaptions>[0] | null = null;
 
@@ -106,6 +105,7 @@ export function VideoBackground({
     void loadYoutubeApi()
       .then(() => {
         if (cancelled || !frameRef.current || !window.YT) return;
+        let resumes = 0;
         new window.YT.Player(frameRef.current, {
           events: {
             onReady: (event) => {
@@ -166,8 +166,8 @@ export function VideoBackground({
       style={
         {
           backgroundImage: tone,
-          "--video-scale": frame?.scale ?? 1.55,
-          "--video-raise": `${frame?.raise ?? 0}%`,
+          "--video-scale": frame?.scale ?? 2.7,
+          "--video-raise": `${frame?.raise ?? 58}%`,
         } as CSSProperties
       }
       aria-hidden="true"

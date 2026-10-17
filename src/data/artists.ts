@@ -49,7 +49,7 @@ export const artists: Artist[] = [
     role: "Singer Songwriter",
     bio: "모든 여정의 기록, 닙아카이브 입니다.",
     video: "https://www.youtube.com/watch?v=PRwQ36Xddpw",
-    videoFrame: { scale: 1.5, raise: 30 },
+    videoFrame: { scale: 2.7, raise: 58 },
     tone: "radial-gradient(130% 100% at 18% 0%,rgba(255, 255, 255, 0.67) 0%, #f7f4ef 46%, #efe8df 100%)",
     theme: {
       base: "#A9A775",
@@ -66,17 +66,17 @@ export const artists: Artist[] = [
     },
     tracks: [
       {
-        id: "harin-1",
+        id: "nib-1",
         title: "쓸모없긴",
         src: "https://www.youtube.com/watch?v=jfj4WeUjoPo&list=RDjfj4WeUjoPo&start_radio=1",
       },
       {
-        id: "harin-2",
+        id: "nib-2",
         title: "해넘이",
         src: "https://www.youtube.com/watch?v=1lsMNSuFm9U&list=OLAK5uy_kYKX-9RSfeFliKNrygYySqsupInjNdBMU&start_radio=1",
       },
       {
-        id: "harin-3",
+        id: "nib-3",
         title: "나의작은모습",
         src: "https://www.youtube.com/watch?v=apm89gILMNU&list=OLAK5uy_kYKX-9RSfeFliKNrygYySqsupInjNdBMU&start_radio=1",
       },
