@@ -45,6 +45,21 @@ function PauseIcon() {
   );
 }
 
+function SkipIcon({ direction }: { direction: "prev" | "next" }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
+      <path
+        d={direction === "prev" ? "M12.8 4.8 7.2 10l5.6 5.2" : "M7.2 4.8 12.8 10 7.2 15.2"}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function Eq() {
   return (
     <span className="eq" aria-hidden="true">
@@ -241,6 +256,13 @@ export function Player({ artist }: PlayerProps) {
     beginRef.current(index);
   };
 
+  const step = (direction: -1 | 1) => {
+    const count = tracksRef.current.length;
+    if (count === 0) return;
+    const next = (trackIndexRef.current + direction + count) % count;
+    beginRef.current(next);
+  };
+
   const seek = (value: number) => {
     const player = playerRef.current;
     if (!player || !readyRef.current || !Number.isFinite(value)) return;
@@ -279,12 +301,19 @@ export function Player({ artist }: PlayerProps) {
             {artist.role}
           </p>
           {error ? <p className="player__note">{error}</p> : null}
+          <div className="player__times">
+            <span>{formatTime(current)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
         </div>
-      </div>
-
-      <div className="player__times">
-        <span>{formatTime(current)}</span>
-        <span>{formatTime(duration)}</span>
+        <div className="player__skip">
+          <button type="button" onClick={() => step(-1)} aria-label="이전 곡">
+            <SkipIcon direction="prev" />
+          </button>
+          <button type="button" onClick={() => step(1)} aria-label="다음 곡">
+            <SkipIcon direction="next" />
+          </button>
+        </div>
       </div>
       <input
         className="player__seek"

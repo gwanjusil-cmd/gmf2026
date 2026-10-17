@@ -1,47 +1,64 @@
-import { useEffect, type CSSProperties } from 'react'
-import { Link } from 'react-router-dom'
-import { VideoBackground } from '../components/VideoBackground'
-import { artists } from '../data/artists'
+import { useEffect, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
+import { VideoBackground } from "../components/VideoBackground";
+import { artists } from "../data/artists";
 
 export function HomePage() {
   useEffect(() => {
-    document.title = 'GMF 뮤지션'
-  }, [])
+    document.title = "GMF 뮤지션";
+  }, []);
 
   return (
     <main className="home">
       <header className="home__bar">
-        <p className="mark">GMF</p>
-        <p className="home__count">다섯 명</p>
+        <p className="mark">nib.archive x UNPLUGGED</p>
+        <p className="home__count">GMF2026</p>
       </header>
 
       <div className="home__intro">
-        <h1>뮤지션</h1>
-        <p>카드를 누르면 영상을 배경으로 대표곡을 들을 수 있습니다.</p>
+        <h1>
+          <span className="home__title">
+            <span>좋은</span>
+            <span>음악을</span>
+            <span className="home__bridge">만나는</span>
+          </span>
+          <span className="home__place">또 하나의 자리</span>
+        </h1>
+        <p>
+          이곳은 독립적으로 활동하는 인디 뮤지션들이 더 많은 사람에게 닿을 수
+          있도록 음반과 굿즈를 함께 소개하는 공간입니다.
+        </p>
       </div>
 
       <div className="home__rail">
         {artists.map((artist) => (
           <Link
             key={artist.id}
-            className={artist.theme ? 'card card--toned' : 'card'}
+            className={artist.theme ? "card card--toned" : "card"}
             to={`/artists/${artist.id}`}
             style={
               artist.theme
                 ? ({
                     background: artist.theme.base,
                     color: artist.theme.ink,
-                    '--ink': artist.theme.ink,
-                    '--muted': artist.theme.muted,
-                    '--faint': artist.theme.muted,
+                    "--ink": artist.theme.ink,
+                    "--muted": artist.theme.muted,
+                    "--faint": artist.theme.muted,
                   } as CSSProperties)
                 : undefined
             }
           >
-            <VideoBackground src={artist.video} tone={artist.tone} playback="visible" />
+            <VideoBackground
+              src={artist.video}
+              tone={artist.tone}
+              playback="visible"
+              frame={artist.videoFrame}
+            />
             <span
               className="card__veil"
-              style={artist.theme ? { background: artist.theme.card } : undefined}
+              style={
+                artist.theme ? { background: artist.theme.card } : undefined
+              }
             />
             <span className="card__copy">
               <span className="card__meta">
@@ -56,5 +73,5 @@ export function HomePage() {
         ))}
       </div>
     </main>
-  )
+  );
 }

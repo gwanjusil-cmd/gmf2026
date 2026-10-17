@@ -8,6 +8,7 @@ const services = [
   { key: "soundcloud", label: "SoundCloud" },
   { key: "instagram", label: "Instagram" },
   { key: "youtube", label: "YouTube" },
+  { key: "linktree", label: "Linktree" },
 ] as const;
 
 function SoundCloudIcon() {
@@ -37,27 +38,35 @@ function YouTubeIcon() {
   );
 }
 
+function LinktreeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="4.3" r="1.45" />
+      <circle cx="6.2" cy="11.4" r="1.45" />
+      <circle cx="17.8" cy="11.4" r="1.45" />
+      <circle cx="6.2" cy="18.4" r="1.45" />
+      <circle cx="17.8" cy="18.4" r="1.45" />
+      <path d="M12 5.8v12M12 9.2 7.4 10.6M12 9.2l4.6 1.4M12 14.4 7.4 17.2M12 14.4l4.6 2.8" />
+    </svg>
+  );
+}
+
 const icons = {
   soundcloud: SoundCloudIcon,
   instagram: InstagramIcon,
   youtube: YouTubeIcon,
+  linktree: LinktreeIcon,
 };
 
 export function SocialLinks({ links }: SocialLinksProps) {
+  const visible = services.filter((service) => links?.[service.key]?.trim());
+  if (visible.length === 0) return null;
+
   return (
     <div className="socials">
-      {services.map((service) => {
+      {visible.map((service) => {
         const Icon = icons[service.key];
-        const href = links?.[service.key]?.trim();
-        const icon = <Icon />;
-
-        if (!href) {
-          return (
-            <span key={service.key} className="social" aria-label={service.label}>
-              {icon}
-            </span>
-          );
-        }
+        const href = links?.[service.key]?.trim() ?? "";
 
         return (
           <a
@@ -68,7 +77,7 @@ export function SocialLinks({ links }: SocialLinksProps) {
             rel="noreferrer"
             aria-label={service.label}
           >
-            {icon}
+            <Icon />
           </a>
         );
       })}

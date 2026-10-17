@@ -26,6 +26,7 @@ export function youtubeId(src: string) {
 export type YoutubePlayer = {
   playVideo: () => void;
   pauseVideo: () => void;
+  mute: () => void;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   loadVideoById: (videoId: string) => void;
   getCurrentTime: () => number;
