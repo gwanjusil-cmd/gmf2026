@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties, type TouchEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type TouchEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Player } from "../components/Player";
 import { SocialLinks } from "../components/SocialLinks";
@@ -9,14 +9,32 @@ export function ArtistPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const frameRef = useRef<HTMLDivElement>(null);
+  const bioRef = useRef<HTMLButtonElement>(null);
   const tracking = useRef(false);
   const start = useRef({ x: 0, y: 0 });
   const artist = getArtist(id ?? "");
+  const [bioOpen, setBioOpen] = useState(false);
+  const [bioMore, setBioMore] = useState(false);
 
   useEffect(() => {
     frameRef.current?.scrollTo(0, 0);
     document.title = artist ? `${artist.name} · GMF` : "GMF";
+    setBioOpen(false);
   }, [artist]);
+
+  useEffect(() => {
+    const node = bioRef.current;
+    if (!node || bioOpen) return;
+
+    const measure = () => {
+      setBioMore(node.scrollHeight > node.clientHeight + 1);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [artist, bioOpen]);
 
   if (!artist) {
     return (
@@ -159,7 +177,19 @@ export function ArtistPage() {
               <SocialLinks links={artist.links} />
             </div>
             <p className="identity__en">{artist.nameEn}</p>
-            <p className="identity__bio">{artist.bio}</p>
+            <button
+              ref={bioRef}
+              type="button"
+              className={
+                bioOpen ? "identity__bio is-open is-more" : bioMore ? "identity__bio is-more" : "identity__bio"
+              }
+              aria-expanded={bioMore || bioOpen ? bioOpen : undefined}
+              onClick={() => {
+                if (bioMore || bioOpen) setBioOpen((open) => !open);
+              }}
+            >
+              {artist.bio}
+            </button>
           </div>
           <Player key={artist.id} artist={artist} />
         </div>

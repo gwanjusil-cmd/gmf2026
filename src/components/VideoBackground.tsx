@@ -166,8 +166,8 @@ export function VideoBackground({
       style={
         {
           backgroundImage: tone,
-          "--video-scale": frame?.scale ?? 2.7,
-          "--video-raise": `${frame?.raise ?? 58}%`,
+          "--video-scale": frame?.scale ?? 1.55,
+          "--video-raise": `${frame?.raise ?? 0}%`,
         } as CSSProperties
       }
       aria-hidden="true"

@@ -319,8 +319,8 @@ a {
   left: 50%;
   width: max(100cqw, calc(100cqh * 16 / 9));
   height: max(100cqh, calc(100cqw * 9 / 16));
-  transform: translate(-50%, calc(-50% - var(--video-raise, 58%)))
-    scale(var(--video-scale, 2.7));
+  transform: translate(-50%, calc(-50% - var(--video-raise, 0%)))
+    scale(var(--video-scale, 1.55));
   border: 0;
   pointer-events: none;
 }
@@ -503,10 +503,19 @@ a {
 .identity__bio {
   max-width: 26em;
   margin-top: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
   color: #1c1c1a;
+  font: inherit;
   font-size: 16px;
   font-weight: 500;
   line-height: 1.65;
+  text-align: left;
+}
+
+.identity__bio.is-more {
+  cursor: pointer;
 }
 
 .identity--toned .identity__index,
@@ -986,7 +995,7 @@ a {
     font-size: clamp(40px, 8vw, 64px);
   }
 
-  .identity__bio {
+  .identity__bio:not(.is-open) {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
